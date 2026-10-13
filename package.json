@@ -1,0 +1,17 @@
+{
+  "name": "pre-entrega",
+  "version": "1.0.0",
+  "description": "Pre entrega de tp perteneciente al curso de Backend con Node de Talento Tech",
+  "repository": {
+    "type": "git",
+    "url": "MarisaSeg210"
+  },
+  "license": "ISC",
+  "author": "Marisa Segura",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  }
+}

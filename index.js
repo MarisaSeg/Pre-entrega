@@ -20,33 +20,7 @@ const request = async (url, options) => {
   }
   return await response.json();
 };
-// Maneja los diferentes métodos HTTP
-
-/*
-if (!method === "GET") {
-  if (id) {
-    console.log(`Fetching all ${resource} with ID: ${id}`);
-  } else {
-    await request(`${API_URL}/${resource}`, { method: "GET" })
-      .then((data) => console.log(`Fetched all ${resource}:`, data))
-      .catch((error) => console.error("Error fetching data:", error));
-  }
-} else if (method === "POST") {
-  console.log(`Creating a new ${resource} with data: ${args.join(" ")}`);
-} else if (method === "DELETE") {
-  fetch(`${API_URL}/${resource}/${id}`, { method: "DELETE" })
-    .then((response) => response.json())
-    .then((data) => console.log(`Deleted ${resource} with ID: ${id}`, data))
-    .catch((error) => console.error("Error deleting data:", error));
-
-  console.log(`Deleting ${resource} with ID: ${id}`);
-} else {
-  console.log(
-    "Invalid method or route. Please use GET, POST, PUT, or DELETE with the appropriate route.",
-  );
-}
-*/
-
+// Se maneja la solicitud según el método especificado
 switch (method) {
   case "GET":
     if (route === "products") {

@@ -10,6 +10,7 @@ if (!method || !route) {
 }
 // Separa el recurso y el ID si está presente
 const [resource, id] = route.split("/");
+
 // Construye la URL de la solicitud
 const url = id ? `${API_URL}/${resource}/${id}` : `${API_URL}/${resource}`;
 // Realiza la solicitud HTTP según el método especificado
@@ -23,54 +24,61 @@ const request = async (url, options) => {
 // Se maneja la solicitud según el método especificado
 switch (method) {
   case "GET":
-    if (route === "products") {
-      console.log("Fetching all products...");
-      getAllProducts();
-    } else if (route === "product") {
-      if (args.length > 0) {
+    if (resource === "products") {
+      if (id) {
         // Check if an ID is provided
-        const id = args[0];
+
         console.log(`Fetching product with ID: ${id}`);
         getProductById(id);
       } else {
-        console.log(
-          "Please provide a valid product ID to fetch a specific product.",
-        );
+        console.log("Fetching all products...");
+        getAllProducts();
       }
     } else {
-      console.log("Invalid route. Please use 'products' or 'product'.");
+      console.log(
+        "Invalid route. Please use 'products' to fetch all products or 'products/{id}' to fetch a specific product.",
+      );
     }
     break;
   case "POST":
     // Check if the route is 'product' and if product data is provided
-    if (route === "product" && args.length > 0) {
-      // Parse the product data from the command line argument
-      const productData = JSON.parse(args[0]);
-
-      createProduct(productData);
+    if (resource === "product" || resource === "products") {
+      if (args.length > 0) {
+        try {
+          const productData = JSON.parse(args[0]);
+          console.log("Creating product with data:", productData);
+          createProduct(productData);
+        } catch (error) {
+          console.error("Invalid product data. Please provide valid JSON.");
+        }
+      } else {
+        console.log(
+          "Please provide product data in JSON format to create a new product.",
+        );
+      }
     } else {
       console.log(
-        "Please provide product data in JSON format to create a new product.",
+        "Invalid route. Please use 'product' or 'products' to create a new product.",
       );
     }
     break;
-  case "PUT":
-    if (route === "product" && args.length > 1) {
-      const id = args[0];
-      const productData = JSON.parse(args[1]);
-      updateProduct(id, productData);
-    }
-    break;
   case "DELETE":
-    if (route === "product" && args.length > 0) {
-      const id = args[0];
-      deleteProduct(id);
+    if ((resource === "products" || resource === "product") && id) {
+      if (!id) {
+        console.log(
+          "Please provide a product ID to delete a product. Usage: DELETE products {id}",
+        );
+        break;
+      } else {
+        console.log(`Deleting product with ID: ${id}`);
+        deleteProduct(id);
+      }
+    } else {
+      console.log(
+        "Invalid route or missing product ID. Please use 'products {id}' to delete a product.",
+      );
     }
     break;
-  default:
-    console.log(
-      "Invalid method or route. Please use GET, POST, PUT, or DELETE with the appropriate route.",
-    );
 }
 // Funciones para realizar las operaciones CRUD
 // Función para obtener todos los productos
@@ -97,7 +105,7 @@ async function getProductById(id) {
 // Funciones para crear productos
 async function createProduct(productData) {
   try {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetch(`${API_URL}/products/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +118,7 @@ async function createProduct(productData) {
     console.error("Error creating product:", error);
   }
 }
-// Función para actualizar un producto por ID
+/* Función para actualizar un producto por ID
 async function updateProduct(id, productData) {
   try {
     const response = await fetch(`${API_URL}/products/${id}`, {
@@ -125,7 +133,7 @@ async function updateProduct(id, productData) {
   } catch (error) {
     console.error(`Error updating product with ID ${id}:`, error);
   }
-}
+}*/
 // Función para eliminar un producto por ID
 async function deleteProduct(id) {
   try {
@@ -133,7 +141,7 @@ async function deleteProduct(id) {
       method: "DELETE",
     });
     const result = await response.json();
-    console.log("Product deleted:", result);
+    console.log(`Response from delete request:`, result);
   } catch (error) {
     console.error(`Error deleting product with ID ${id}:`, error);
   }

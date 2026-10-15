@@ -33,7 +33,9 @@ switch (method) {
         console.log(`Fetching product with ID: ${id}`);
         getProductById(id);
       } else {
-        console.log("Please provide a valid product ID to fetch a specific product.");
+        console.log(
+          "Please provide a valid product ID to fetch a specific product.",
+        );
       }
     } else {
       console.log("Invalid route. Please use 'products' or 'product'.");
@@ -42,12 +44,14 @@ switch (method) {
   case "POST":
     // Check if the route is 'product' and if product data is provided
     if (route === "product" && args.length > 0) {
-        // Parse the product data from the command line argument
+      // Parse the product data from the command line argument
       const productData = JSON.parse(args[0]);
-      
+
       createProduct(productData);
-    }else {
-      console.log("Please provide product data in JSON format to create a new product.");
+    } else {
+      console.log(
+        "Please provide product data in JSON format to create a new product.",
+      );
     }
     break;
   case "PUT":
@@ -69,6 +73,7 @@ switch (method) {
     );
 }
 // Funciones para realizar las operaciones CRUD
+// Función para obtener todos los productos
 
 async function getAllProducts() {
   try {
@@ -79,7 +84,7 @@ async function getAllProducts() {
     console.error("Error fetching products:", error);
   }
 }
-
+// Función para obtener un producto por ID
 async function getProductById(id) {
   try {
     const response = await fetch(`${API_URL}/products/${id}`);
@@ -92,7 +97,6 @@ async function getProductById(id) {
 // Funciones para crear productos
 async function createProduct(productData) {
   try {
-    // Se realiza la solicitud POST para crear un nuevo producto
     const response = await fetch(`${API_URL}/products`, {
       method: "POST",
       headers: {
@@ -106,7 +110,7 @@ async function createProduct(productData) {
     console.error("Error creating product:", error);
   }
 }
-
+// Función para actualizar un producto por ID
 async function updateProduct(id, productData) {
   try {
     const response = await fetch(`${API_URL}/products/${id}`, {
@@ -122,7 +126,7 @@ async function updateProduct(id, productData) {
     console.error(`Error updating product with ID ${id}:`, error);
   }
 }
-
+// Función para eliminar un producto por ID
 async function deleteProduct(id) {
   try {
     const response = await fetch(`${API_URL}/products/${id}`, {

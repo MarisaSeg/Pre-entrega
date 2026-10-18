@@ -43,17 +43,18 @@ switch (method) {
   case "POST":
     // Check if the route is 'product' and if product data is provided
     if (resource === "product" || resource === "products") {
-      if (args.length > 0) {
-        try {
-          const productData = JSON.parse(args[0]);
-          console.log("Creating product with data:", productData);
-          createProduct(productData);
-        } catch (error) {
-          console.error("Invalid product data. Please provide valid JSON.");
-        }
-      } else {
+      if (args.length > 2 && args.length < 4) {
+        //cantidad de argumentos que paso
+        const productData = {
+          title: args[0],
+          price: parseFloat(args[1]),
+          category: args[2],
+        };
+        console.log("Creating product with data:", productData);
+        createProduct(productData);
+      } else if (args.length < 3) {
         console.log(
-          "Please provide product data in JSON format to create a new product.",
+          "Por favor, proporcione: nombre, precio y categoría para crear el producto correctamente.",
         );
       }
     } else {
@@ -104,16 +105,25 @@ async function getProductById(id) {
 }
 // Funciones para crear productos
 async function createProduct(productData) {
+  const newProduct = {
+    title: productData.title,
+    price: productData.price,
+    category: productData.category,
+  };
   try {
     const response = await fetch(`${API_URL}/products/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(productData),
+      body: JSON.stringify(newProduct),
     });
-    const newProduct = await response.json();
-    console.log("Product created:", newProduct);
+    if (!response.ok) {
+      throw new Error(`Error en la petición: ${response.status}`);
+    }
+    const createdProduct = await response.json();
+    console.log("Product created:", createdProduct);
+    return createdProduct;
   } catch (error) {
     console.error("Error creating product:", error);
   }
